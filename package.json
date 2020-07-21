@@ -1,12 +1,13 @@
 {
   "name": "cream-merkle-tree",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A TypeScript implementation of the Merkle tree used in the C.R.E.A.M application",
   "main": "build/index.js",
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc",
-    "test": "npx jest"
+    "test": "npx jest",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
