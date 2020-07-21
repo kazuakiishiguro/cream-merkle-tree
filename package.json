@@ -8,8 +8,16 @@
     "build": "tsc",
     "test": "npx jest"
   },
-  "author": "Kazuaki Ishiguro <gurokazu@gmail.com> (https://kazuaki.dev)",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kazuakiishiguro/cream-merkle-tree.git"
+  },
+  "author": "Kazuaki Ishiguro",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/kazuakiishiguro/cream-merkle-tree/issues"
+  },
+  "homepage": "https://github.com/kazuakiishiguro/cream-merkle-tree#readme",
   "devDependencies": {
     "@types/jest": "^26.0.4",
     "jest": "^26.1.0",
