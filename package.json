@@ -1,0 +1,23 @@
+{
+  "name": "cream-merkle-tree",
+  "version": "0.0.1",
+  "description": "A TypeScript implementation of the Merkle tree used in the C.R.E.A.M application",
+  "main": "build/index.js",
+  "scripts": {
+    "watch": "tsc --watch",
+    "build": "tsc",
+    "test": "npx jest"
+  },
+  "author": "Kazuaki Ishiguro <gurokazu@gmail.com> (https://kazuaki.dev)",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^26.0.4",
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.2",
+    "typescript": "^3.9.6"
+  },
+  "dependencies": {
+    "circomlib": "0.0.20",
+    "snarkjs": "0.1.20"
+  }
+}
