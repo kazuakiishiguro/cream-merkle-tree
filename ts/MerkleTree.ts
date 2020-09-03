@@ -1,9 +1,8 @@
-import * as snarkjs from 'snarkjs'
 import { SnarkBigInt, MimcSpongeHasher } from './mimcsponge'
 
 const mimcspongeHasher = new MimcSpongeHasher
 
-export default class MerkleTree {
+export class MerkleTree {
     // tree depth
     public depth: number
 
@@ -19,7 +18,11 @@ export default class MerkleTree {
     // the smallest empty leaf index
     public nextIndex: number
 
+    // hash values of the leaves
     public leaves: SnarkBigInt[] = []
+
+    // total number of leaves
+    public leafNumber: number = Math.pow(2, this.depth)
 
     //cached values required to compute Merkle proofs
     public zeros: any
@@ -64,6 +67,10 @@ export default class MerkleTree {
     public insert(
         _value: any
     ) {
+        if (this.nextIndex + 1 > this.leafNumber) {
+            throw new Error('Merkle Tree at max capacity')
+        }
+
         let curIdx = this.nextIndex
         this.nextIndex += 1
 
@@ -167,8 +174,4 @@ export default class MerkleTree {
 
         return [path, pathIndex]
     }
-}
-
-export {
-    MerkleTree
 }

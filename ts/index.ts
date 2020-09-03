@@ -1,3 +1,3 @@
-import MerkleTree from './MerkleTree'
+import { MerkleTree } from './MerkleTree'
 
 export default MerkleTree

@@ -22,19 +22,18 @@ class MimcSpongeHasher implements IHasher {
     ): SnarkBigInt {
         return mimcsponge.multiHash([left, right], 0, 1)
     }
-}
 
-const hashOne = (
-    preImage: SnarkBigInt
-): SnarkBigInt => {
-    return mimcsponge.multiHash([preImage], 0, 1)
+    public hashOne(
+        preImage: SnarkBigInt
+    ): SnarkBigInt {
+        return mimcsponge.multiHash([preImage], 0, 1)
+    }
 }
 
 export {
     bigInt,
     SnarkBigInt,
     SNARK_FIELD_SIZE,
-    MimcSpongeHasher,
-    hashOne
+    MimcSpongeHasher
 }
 
