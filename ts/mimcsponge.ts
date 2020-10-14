@@ -1,15 +1,15 @@
 import * as circomlib from 'circomlib'
-import * as snarkjs from 'snarkjs'
+
+const bigInt = require('./bigInt')
+
+type SnarkBigInt = typeof bigInt
 
 const mimcsponge = circomlib.mimcsponge
-const bigInt = snarkjs.bigInt
 
 // prime number for babyjubjub ec
 const SNARK_FIELD_SIZE = bigInt(
     '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 )
-
-type SnarkBigInt = snarkjs.bigInt
 
 interface IHasher {
     hash: Function

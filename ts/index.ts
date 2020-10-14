@@ -1,3 +1,8 @@
 import { MerkleTree } from './MerkleTree'
+import { bigInt, SnarkBigInt } from './mimcsponge'
 
-export default MerkleTree
+export {
+  MerkleTree,
+  bigInt,
+  SnarkBigInt
+}
