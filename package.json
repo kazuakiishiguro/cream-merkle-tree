@@ -28,6 +28,6 @@
   },
   "dependencies": {
     "circomlib": "^0.2.4",
-    "typescript": "^3.9.7"
+    "typescript": "^4.2.2"
   }
 }

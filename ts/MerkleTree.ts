@@ -22,6 +22,7 @@ export class MerkleTree {
     public leaves: SnarkBigInt[] = []
 
     // total number of leaves
+    // @ts-ignore: this.prop is assigned before being used
     public leafNumber: number = Math.pow(2, this.depth)
 
     //cached values required to compute Merkle proofs
