@@ -23,359 +23,360 @@
  * Modified by Kazuaki Ishiguro for C.R.E.A.M
  */
 
-let wBigInt;
+let wBigInt
 
-wBigInt  = BigInt;
-wBigInt.one = wBigInt(1);
-wBigInt.zero = wBigInt(0);
+wBigInt = BigInt
+wBigInt.one = wBigInt(1)
+wBigInt.zero = wBigInt(0)
 
 // Affine
 wBigInt.genAffine = (q) => {
-	const nq = -q;
+	const nq = -q
 	return (a) => {
-		let aux = a;
+		let aux = a
 		if (aux < 0) {
 			if (aux <= nq) {
-				aux = aux % q;
+				aux = aux % q
 			}
 			if (aux < wBigInt.zero) {
-				aux = aux + q;
+				aux = aux + q
 			}
 		} else {
 			if (aux >= q) {
-				aux = aux % q;
+				aux = aux % q
 			}
 		}
-		return aux.valueOf();
-	};
-};
+		return aux.valueOf()
+	}
+}
 
 // Inverse
 wBigInt.genInverse = (q) => {
 	return (a) => {
-		let t = wBigInt.zero;
-		let r = q;
-		let newt = wBigInt.one;
-		let newr = wBigInt.affine(a, q);
-		while (newr!=wBigInt.zero) {
-			let q = r/newr;
-			[t, newt] = [newt, t-q*newt];
-			[r, newr] = [newr, r-q*newr];
+		let t = wBigInt.zero
+		let r = q
+		let newt = wBigInt.one
+		let newr = wBigInt.affine(a, q)
+		while (newr != wBigInt.zero) {
+			let q = r / newr
+			;[t, newt] = [newt, t - q * newt]
+			;[r, newr] = [newr, r - q * newr]
 		}
-		if (t<wBigInt.zero) t += q;
-		return t;
-	};
-};
+		if (t < wBigInt.zero) t += q
+		return t
+	}
+}
 
 // Add
 wBigInt.genAdd = (q) => {
 	if (q) {
-		return (a,b) => (a+b) % q;
+		return (a, b) => (a + b) % q
 	} else {
-		return (a,b) => a+b;
+		return (a, b) => a + b
 	}
-};
+}
 
 // Sub
 wBigInt.genSub = (q) => {
 	if (q) {
-		return (a,b) => (a-b) % q;
+		return (a, b) => (a - b) % q
 	} else {
-		return (a,b) => a-b;
+		return (a, b) => a - b
 	}
-};
+}
 
 // Neg
 wBigInt.genNeg = (q) => {
 	if (q) {
-		return (a) => (-a) % q;
+		return (a) => -a % q
 	} else {
-		return (a) => -a;
+		return (a) => -a
 	}
-};
+}
 
 // Mul
 wBigInt.genMul = (q) => {
 	if (q) {
-		return (a,b) => (a*b) % q;
+		return (a, b) => (a * b) % q
 	} else {
-		return (a,b) => a*b;
+		return (a, b) => a * b
 	}
-};
+}
 
 // Shr
 wBigInt.genShr = () => {
-	return (a,b) => a >> wBigInt(b);
-};
+	return (a, b) => a >> wBigInt(b)
+}
 
 // Shl
 wBigInt.genShl = (q) => {
 	if (q) {
-		return (a,b) => (a << wBigInt(b)) % q;
+		return (a, b) => (a << wBigInt(b)) % q
 	} else {
-		return (a,b) => a << wBigInt(b);
+		return (a, b) => a << wBigInt(b)
 	}
-};
+}
 
 // Equals
 wBigInt.genEquals = (q) => {
 	if (q) {
-		return (a,b) => (a.affine(q) == b.affine(q));
+		return (a, b) => a.affine(q) == b.affine(q)
 	} else {
-		return (a,b) => a == b;
+		return (a, b) => a == b
 	}
-};
+}
 
 // Square
 wBigInt.genSquare = (q) => {
 	if (q) {
-		return (a) => (a*a) %q;
+		return (a) => (a * a) % q
 	} else {
-		return (a) => a*a;
+		return (a) => a * a
 	}
-};
+}
 
 // Double
 wBigInt.genDouble = (q) => {
 	if (q) {
-		return (a) => (a+a) %q;
+		return (a) => (a + a) % q
 	} else {
-		return (a) => a+a;
+		return (a) => a + a
 	}
-};
+}
 
 // IsZero
 wBigInt.genIsZero = (q) => {
 	if (q) {
-		return (a) => (a.affine(q) == wBigInt.zero);
+		return (a) => a.affine(q) == wBigInt.zero
 	} else {
-		return (a) =>  a == wBigInt.zero;
+		return (a) => a == wBigInt.zero
 	}
-};
+}
 
 // Other minor functions
-wBigInt.prototype.isOdd = function() {
-	return (this & wBigInt.one) == wBigInt(1);
-};
+wBigInt.prototype.isOdd = function () {
+	return (this & wBigInt.one) == wBigInt(1)
+}
 
-wBigInt.prototype.isNegative = function() {
-	return this < wBigInt.zero;
-};
+wBigInt.prototype.isNegative = function () {
+	return this < wBigInt.zero
+}
 
-wBigInt.prototype.and = function(m) {
-	return this & m;
-};
+wBigInt.prototype.and = function (m) {
+	return this & m
+}
 
-wBigInt.prototype.div = function(c) {
-	return this / c;
-};
+wBigInt.prototype.div = function (c) {
+	return this / c
+}
 
-wBigInt.prototype.mod = function(c) {
-	return this % c;
-};
+wBigInt.prototype.mod = function (c) {
+	return this % c
+}
 
-wBigInt.prototype.pow = function(c) {
-	return this ** c;
-};
+wBigInt.prototype.pow = function (c) {
+	return this ** c
+}
 
-wBigInt.prototype.abs = function() {
-	return (this > wBigInt.zero) ? this : -this;
-};
+wBigInt.prototype.abs = function () {
+	return this > wBigInt.zero ? this : -this
+}
 
-wBigInt.prototype.modPow = function(e, m) {
-	let acc = wBigInt.one;
-	let exp = this;
-	let rem = e;
+wBigInt.prototype.modPow = function (e, m) {
+	let acc = wBigInt.one
+	let exp = this
+	let rem = e
 	while (rem) {
 		if (rem & wBigInt.one) {
-			acc = (acc * exp) %m;
+			acc = (acc * exp) % m
 		}
-		exp = (exp * exp) % m;
-		rem = rem >> wBigInt.one;
+		exp = (exp * exp) % m
+		rem = rem >> wBigInt.one
 	}
-	return acc;
-};
+	return acc
+}
 
-wBigInt.prototype.greaterOrEquals = function(b) {
-	return this >= b;
-};
+wBigInt.prototype.greaterOrEquals = function (b) {
+	return this >= b
+}
 
-wBigInt.prototype.greater = function(b) {
-	return this > b;
-};
-wBigInt.prototype.gt = wBigInt.prototype.greater;
+wBigInt.prototype.greater = function (b) {
+	return this > b
+}
+wBigInt.prototype.gt = wBigInt.prototype.greater
 
-wBigInt.prototype.lesserOrEquals = function(b) {
-	return this <= b;
-};
+wBigInt.prototype.lesserOrEquals = function (b) {
+	return this <= b
+}
 
-wBigInt.prototype.lesser = function(b) {
-	return this < b;
-};
-wBigInt.prototype.lt = wBigInt.prototype.lesser;
+wBigInt.prototype.lesser = function (b) {
+	return this < b
+}
+wBigInt.prototype.lt = wBigInt.prototype.lesser
 
-wBigInt.prototype.equals = function(b) {
-	return this == b;
-};
-wBigInt.prototype.eq = wBigInt.prototype.equals;
+wBigInt.prototype.equals = function (b) {
+	return this == b
+}
+wBigInt.prototype.eq = wBigInt.prototype.equals
 
-wBigInt.prototype.neq = function(b) {
-	return this != b;
-};
+wBigInt.prototype.neq = function (b) {
+	return this != b
+}
 
-wBigInt.prototype.toJSNumber = function() {
-	return Number(this);
-};
+wBigInt.prototype.toJSNumber = function () {
+	return Number(this)
+}
 
-wBigInt.affine = function(a, q) {
-    return wBigInt.genAffine(q)(a);
-};
+wBigInt.affine = function (a, q) {
+	return wBigInt.genAffine(q)(a)
+}
 
 wBigInt.prototype.affine = function (q) {
-    return wBigInt.affine(this, q);
-};
+	return wBigInt.affine(this, q)
+}
 
-wBigInt.inverse = function(a, q) {
-    return wBigInt.genInverse(q)(a);
-};
+wBigInt.inverse = function (a, q) {
+	return wBigInt.genInverse(q)(a)
+}
 
 wBigInt.prototype.inverse = function (q) {
-    return wBigInt.genInverse(q)(this);
-};
+	return wBigInt.genInverse(q)(this)
+}
 
-wBigInt.add = function(a, b, q) {
-    return wBigInt.genAdd(q)(a,b);
-};
+wBigInt.add = function (a, b, q) {
+	return wBigInt.genAdd(q)(a, b)
+}
 
 wBigInt.prototype.add = function (a, q) {
-    return wBigInt.genAdd(q)(this, a);
-};
+	return wBigInt.genAdd(q)(this, a)
+}
 
-wBigInt.sub = function(a, b, q) {
-    return wBigInt.genSub(q)(a,b);
-};
+wBigInt.sub = function (a, b, q) {
+	return wBigInt.genSub(q)(a, b)
+}
 
 wBigInt.prototype.sub = function (a, q) {
-    return wBigInt.genSub(q)(this, a);
-};
+	return wBigInt.genSub(q)(this, a)
+}
 
-wBigInt.neg = function(a, q) {
-    return wBigInt.genNeg(q)(a);
-};
+wBigInt.neg = function (a, q) {
+	return wBigInt.genNeg(q)(a)
+}
 
 wBigInt.prototype.neg = function (q) {
-    return wBigInt.genNeg(q)(this);
-};
+	return wBigInt.genNeg(q)(this)
+}
 
-wBigInt.mul = function(a, b, q) {
-    return wBigInt.genMul(q)(a,b);
-};
+wBigInt.mul = function (a, b, q) {
+	return wBigInt.genMul(q)(a, b)
+}
 
 wBigInt.prototype.mul = function (a, q) {
-    return wBigInt.genMul(q)(this, a);
-};
+	return wBigInt.genMul(q)(this, a)
+}
 
-wBigInt.shr = function(a, b, q) {
-    return wBigInt.genShr(q)(a,b);
-};
+wBigInt.shr = function (a, b, q) {
+	return wBigInt.genShr(q)(a, b)
+}
 
 wBigInt.prototype.shr = function (a, q) {
-    return wBigInt.genShr(q)(this, a);
-};
+	return wBigInt.genShr(q)(this, a)
+}
 
-wBigInt.shl = function(a, b, q) {
-    return wBigInt.genShl(q)(a,b);
-};
+wBigInt.shl = function (a, b, q) {
+	return wBigInt.genShl(q)(a, b)
+}
 
 wBigInt.prototype.shl = function (a, q) {
-    return wBigInt.genShl(q)(this, a);
-};
+	return wBigInt.genShl(q)(this, a)
+}
 
-wBigInt.equals = function(a, b, q) {
-    return wBigInt.genEquals(q)(a,b);
-};
+wBigInt.equals = function (a, b, q) {
+	return wBigInt.genEquals(q)(a, b)
+}
 
 wBigInt.prototype.equals = function (a, q) {
-    return wBigInt.genEquals(q)(this, a);
-};
+	return wBigInt.genEquals(q)(this, a)
+}
 
-wBigInt.square = function(a, q) {
-    return wBigInt.genSquare(q)(a);
-};
+wBigInt.square = function (a, q) {
+	return wBigInt.genSquare(q)(a)
+}
 
 wBigInt.prototype.square = function (q) {
-    return wBigInt.genSquare(q)(this);
-};
+	return wBigInt.genSquare(q)(this)
+}
 
-wBigInt.double = function(a, q) {
-    return wBigInt.genDouble(q)(a);
-};
+wBigInt.double = function (a, q) {
+	return wBigInt.genDouble(q)(a)
+}
 
 wBigInt.prototype.double = function (q) {
-    return wBigInt.genDouble(q)(this);
-};
+	return wBigInt.genDouble(q)(this)
+}
 
-wBigInt.isZero = function(a, q) {
-    return wBigInt.genIsZero(q)(a);
-};
+wBigInt.isZero = function (a, q) {
+	return wBigInt.genIsZero(q)(a)
+}
 
 wBigInt.prototype.isZero = function (q) {
-    return wBigInt.genIsZero(q)(this);
-};
+	return wBigInt.genIsZero(q)(this)
+}
 
-wBigInt.leBuff2int = function(buff) {
-    let res = wBigInt.zero;
-    for (let i=0; i<buff.length; i++) {
-        const n = wBigInt(buff[i]);
-        res = res.add(n.shl(i*8));
-    }
-    return res;
-};
+wBigInt.leBuff2int = function (buff) {
+	let res = wBigInt.zero
+	for (let i = 0; i < buff.length; i++) {
+		const n = wBigInt(buff[i])
+		res = res.add(n.shl(i * 8))
+	}
+	return res
+}
 
-wBigInt.leInt2Buff = function(n, len) {
-    let r = n;
-    let o =0;
-    const buff = Buffer.alloc(len);
-    while ((r.greater(wBigInt.zero))&&(o<buff.length)) {
-        let c = Number(r.and(wBigInt("255")));
-        buff[o] = c;
-        o++;
-        r = r.shr(8);
-    }
-    if (r.greater(wBigInt.zero)) throw new Error("Number does not feed in buffer");
-    return buff;
-};
+wBigInt.leInt2Buff = function (n, len) {
+	let r = n
+	let o = 0
+	const buff = Buffer.alloc(len)
+	while (r.greater(wBigInt.zero) && o < buff.length) {
+		let c = Number(r.and(wBigInt('255')))
+		buff[o] = c
+		o++
+		r = r.shr(8)
+	}
+	if (r.greater(wBigInt.zero))
+		throw new Error('Number does not feed in buffer')
+	return buff
+}
 
 wBigInt.prototype.leInt2Buff = function (len) {
-    return wBigInt.leInt2Buff(this,len);
-};
+	return wBigInt.leInt2Buff(this, len)
+}
 
+wBigInt.beBuff2int = function (buff) {
+	let res = wBigInt.zero
+	for (let i = 0; i < buff.length; i++) {
+		const n = wBigInt(buff[buff.length - i - 1])
+		res = res.add(n.shl(i * 8))
+	}
+	return res
+}
 
-wBigInt.beBuff2int = function(buff) {
-    let res = wBigInt.zero;
-    for (let i=0; i<buff.length; i++) {
-        const n = wBigInt(buff[buff.length - i - 1]);
-        res = res.add(n.shl(i*8));
-    }
-    return res;
-};
-
-wBigInt.beInt2Buff = function(n, len) {
-    let r = n;
-    let o =len-1;
-    const buff = Buffer.alloc(len);
-    while ((r.greater(wBigInt.zero))&&(o>=0)) {
-        let c = Number(r.and(wBigInt("255")));
-        buff[o] = c;
-        o--;
-        r = r.shr(8);
-    }
-    if (r.greater(wBigInt.zero)) throw new Error("Number does not feed in buffer");
-    return buff;
-};
+wBigInt.beInt2Buff = function (n, len) {
+	let r = n
+	let o = len - 1
+	const buff = Buffer.alloc(len)
+	while (r.greater(wBigInt.zero) && o >= 0) {
+		let c = Number(r.and(wBigInt('255')))
+		buff[o] = c
+		o--
+		r = r.shr(8)
+	}
+	if (r.greater(wBigInt.zero))
+		throw new Error('Number does not feed in buffer')
+	return buff
+}
 
 wBigInt.prototype.beInt2Buff = function (len) {
-    return wBigInt.beInt2Buff(this,len);
-};
+	return wBigInt.beInt2Buff(this, len)
+}
 
-module.exports = wBigInt;
+module.exports = wBigInt
