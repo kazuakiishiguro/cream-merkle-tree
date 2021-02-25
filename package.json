@@ -24,6 +24,9 @@
       "pre-commit": "lint-staged"
     }
   },
+  "lint-staged": {
+    "./ts/**/*.{js,ts}": "prettier --write"
+  },
   "homepage": "https://github.com/kazuakiishiguro/cream-merkle-tree#readme",
   "devDependencies": {
     "@types/jest": "^26.0.4",
