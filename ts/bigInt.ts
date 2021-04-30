@@ -20,7 +20,7 @@
 /*
  * This code is ported from
  * https://github.com/iden3/snarkjs/releases/tag/v0.1.20
- * Modified by Kazuaki Ishiguro for C.R.E.A.M
+ * Modified by Kazuaki Ishiguro for zkCREAM
  */
 
 let wBigInt
