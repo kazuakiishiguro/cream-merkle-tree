@@ -6,6 +6,16 @@ A merkle tree implementation for [C.R.E.A.M](https://github.com/couger-inc/cream
 
 ## Installation
 
+```bash
+$ yarn add cream-merkle-tree
+# or
+$ npm install cream-merkle-tree
 ```
-npm install cream-merkle-tree
+
+## Test
+
+```bash
+$ yarn test
+# or
+$ npm run test
 ```
