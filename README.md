@@ -4,6 +4,10 @@
 
 A merkle tree implementation for [zkCREAM](https://github.com/couger-inc/cream.git) application.
 
+## Supported node version
+
+* nodejs ^11.x
+
 ## Installation
 
 ```bash
