@@ -2,6 +2,8 @@ import { SnarkBigInt, MimcSpongeHasher } from './mimcsponge'
 
 const mimcspongeHasher = new MimcSpongeHasher()
 
+export type ChildLocation = 0 | 1   // 0 = left, 1 = right
+
 export class MerkleTree {
 	// tree depth
 	public depth: number
@@ -22,13 +24,14 @@ export class MerkleTree {
 	public leaves: SnarkBigInt[] = []
 
 	// total number of leaves
-	// @ts-ignore: this.prop is assigned before being used
-	public leafNumber: number = Math.pow(2, this.depth)
+	public leafNumber: number
 
 	//cached values required to compute Merkle proofs
-	public zeros: any
-	public filledSubtrees: any
-	public filledPaths: any
+	public zeros: {[level: number]: SnarkBigInt}  // zero values of each level
+	public filledSubtrees: {[level: number]: SnarkBigInt}  // values on most recent path from inserted value to root
+
+	// partial tree w/ inserted values, hashes created from it and values used to created the hashes
+	public filledPaths: {[level: number]: {[index: number]: SnarkBigInt}}
 
 	constructor(
 		_depth: number,
@@ -45,6 +48,7 @@ export class MerkleTree {
 		this.zeros = { 0: this.zeroValue }
 		this.filledSubtrees = { 0: this.zeroValue }
 		this.filledPaths = { 0: {} }
+		this.leafNumber = Math.pow(2, this.depth)
 
 		// create initial merkletree with zero value
 		// with given N levels and zeroValue
@@ -68,7 +72,7 @@ export class MerkleTree {
 	 * insert a leaf into the merkle tree
 	 * @param _value the value to insert
 	 */
-	public insert(_value: any) {
+	public insert(_value: SnarkBigInt) {
 		if (this.nextIndex + 1 > this.leafNumber) {
 			throw new Error('Merkle Tree at max capacity')
 		}
@@ -77,8 +81,8 @@ export class MerkleTree {
 		this.nextIndex += 1
 
 		let currentLevelHash = _value
-		let left
-		let right
+		let left: SnarkBigInt
+		let right: SnarkBigInt
 
 		for (let i = 0; i < this.depth; i++) {
 			if (curIdx % 2 === 0) {
@@ -112,7 +116,7 @@ export class MerkleTree {
 			throw new Error('The leaf index specified is too large')
 		}
 
-		let temp = this.leaves
+		let temp: SnarkBigInt[] = this.leaves
 		temp[_leafIndex] = _value
 
 		const newTree = new MerkleTree(this.depth, this.zeroValue)
@@ -145,7 +149,7 @@ export class MerkleTree {
 	 */
 	public getPathUpdate(
 		_leafIndex: number | SnarkBigInt
-	): [SnarkBigInt[], number[]] {
+	): [SnarkBigInt[], ChildLocation[]] {
 		const leafIndex = parseInt(_leafIndex.toString(), 10)
 		if (leafIndex >= this.nextIndex) {
 			throw new Error('Path not constructed yet, leafIndex >= nextIndex')
@@ -153,7 +157,7 @@ export class MerkleTree {
 
 		let curIdx = leafIndex
 		let path: any[] = []
-		let pathIndex: any[] = []
+		let pathIndex: ChildLocation[] = []
 
 		for (let i = 0; i < this.depth; i++) {
 			if (curIdx % 2 === 0) {
