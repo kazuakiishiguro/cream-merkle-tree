@@ -1,10 +1,11 @@
 import { MerkleTree } from '../MerkleTree'
-import { bigInt, SnarkBigInt, MimcSpongeHasher } from '../mimcsponge'
+import { PoseidonHasher } from '../poseidon'
+import { bigInt, SnarkBigInt } from '../common'
 
 const DEPTH = 2
 const ZERO_VALUE = bigInt(0)
 
-const mimcspongeHasher = new MimcSpongeHasher()
+const poseidonHasher = new PoseidonHasher()
 
 /*
  * Calculate a merkle root given a list of leaves
@@ -22,8 +23,8 @@ const calculateRoot = (
 	for (let i = 0; i < numLeafHashers; i++) {
 		hashes.push(
 			tree.hashLeftRight(
-				mimcspongeHasher.hashOne(unhashedLeaves[i * 2]),
-				mimcspongeHasher.hashOne(unhashedLeaves[i * 2 + 1])
+				poseidonHasher.hashOne(unhashedLeaves[i * 2]),
+				poseidonHasher.hashOne(unhashedLeaves[i * 2 + 1])
 			)
 		)
 	}
@@ -46,7 +47,7 @@ describe('MerkleTree', () => {
 
 	it('should initialize correctly', () => {
 		const INITIAL_ROOT = bigInt(
-			'8234632431858659206959486870703726442454087730228411315786216865106603625166'
+      '7423237065226347324353380772367382631490014989348495481811164164159255474657'
 		)
 
 		const tree2 = new MerkleTree(DEPTH, ZERO_VALUE)
@@ -65,7 +66,7 @@ describe('MerkleTree', () => {
 		for (let i = 0; i < 2 ** DEPTH; i++) {
 			const leaf = bigInt(i + 1)
 			leaves.push(leaf)
-			tree.insert(mimcspongeHasher.hashOne(leaf))
+			tree.insert(poseidonHasher.hashOne(leaf))
 		}
 
 		expect(calculateRoot(leaves, tree).toString()).toEqual(
@@ -78,14 +79,14 @@ describe('MerkleTree', () => {
 		const tree2 = new MerkleTree(DEPTH, ZERO_VALUE)
 
 		for (let i = 0; i < 2 ** DEPTH; i++) {
-			tree1.insert(mimcspongeHasher.hashOne(i + 1))
-			tree2.insert(mimcspongeHasher.hashOne(i + 1))
+			tree1.insert(poseidonHasher.hashOne(i + 1))
+			tree2.insert(poseidonHasher.hashOne(i + 1))
 		}
 
 		expect(tree1.root.toString()).toEqual(tree2.root.toString())
 
 		const indexToUpdate = 1
-		const newVal = mimcspongeHasher.hashOne(bigInt(4))
+		const newVal = poseidonHasher.hashOne(bigInt(4))
 		tree1.update(indexToUpdate, newVal)
 
 		expect(tree1.root).not.toEqual(tree2.root)

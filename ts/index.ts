@@ -1,4 +1,4 @@
 import { MerkleTree } from './MerkleTree'
-import { bigInt, SnarkBigInt } from './mimcsponge'
+import { SnarkBigInt, bigInt } from './common'
 
 export { MerkleTree, bigInt, SnarkBigInt }
