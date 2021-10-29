@@ -1,6 +1,8 @@
 import { SnarkBigInt, MimcSpongeHasher } from './mimcsponge'
+import { PoseidonHasher } from './poseidon'
 
 const mimcspongeHasher = new MimcSpongeHasher()
+const poseidonHasher = new PoseidonHasher()
 
 export type ChildLocation = 0 | 1   // 0 = left, 1 = right
 
@@ -39,7 +41,7 @@ export class MerkleTree {
 		_hashLeftRight: (
 			left: SnarkBigInt,
 			right: SnarkBigInt
-		) => SnarkBigInt = mimcspongeHasher.hash
+		) => SnarkBigInt = poseidonHasher.hash
 	) {
 		this.depth = _depth
 		this.zeroValue = _zero_value
