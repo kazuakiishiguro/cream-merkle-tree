@@ -1,7 +1,7 @@
 {
   "name": "cream-merkle-tree",
   "version": "0.1.0",
-  "description": "A TypeScript implementation of the Merkle tree used in the C.R.E.A.M application",
+  "description": "A TypeScript implementation of the Merkle tree used in the zkCREAM application",
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
