@@ -1,10 +1,11 @@
 import { MerkleTree } from '../MerkleTree'
-import { bigInt, SnarkBigInt, MimcSpongeHasher } from '../mimcsponge'
+import { bigInt, SnarkBigInt } from '../mimcsponge'
+import { PoseidonHasher } from '../poseidon'
 
 const DEPTH = 2
 const ZERO_VALUE = bigInt(0)
 
-const mimcspongeHasher = new MimcSpongeHasher()
+const hasher = new PoseidonHasher()
 
 /*
  * Calculate a merkle root given a list of leaves
@@ -22,8 +23,8 @@ const calculateRoot = (
 	for (let i = 0; i < numLeafHashers; i++) {
 		hashes.push(
 			tree.hashLeftRight(
-				mimcspongeHasher.hashOne(unhashedLeaves[i * 2]),
-				mimcspongeHasher.hashOne(unhashedLeaves[i * 2 + 1])
+				hasher.hashOne(unhashedLeaves[i * 2]),
+				hasher.hashOne(unhashedLeaves[i * 2 + 1])
 			)
 		)
 	}
@@ -65,7 +66,7 @@ describe('MerkleTree', () => {
 		for (let i = 0; i < 2 ** DEPTH; i++) {
 			const leaf = bigInt(i + 1)
 			leaves.push(leaf)
-			tree.insert(mimcspongeHasher.hashOne(leaf))
+			tree.insert(hasher.hashOne(leaf))
 		}
 
 		expect(calculateRoot(leaves, tree).toString()).toEqual(
@@ -78,14 +79,14 @@ describe('MerkleTree', () => {
 		const tree2 = new MerkleTree(DEPTH, ZERO_VALUE)
 
 		for (let i = 0; i < 2 ** DEPTH; i++) {
-			tree1.insert(mimcspongeHasher.hashOne(i + 1))
-			tree2.insert(mimcspongeHasher.hashOne(i + 1))
+			tree1.insert(hasher.hashOne(i + 1))
+			tree2.insert(hasher.hashOne(i + 1))
 		}
 
 		expect(tree1.root.toString()).toEqual(tree2.root.toString())
 
 		const indexToUpdate = 1
-		const newVal = mimcspongeHasher.hashOne(bigInt(4))
+		const newVal = hasher.hashOne(bigInt(4))
 		tree1.update(indexToUpdate, newVal)
 
 		expect(tree1.root).not.toEqual(tree2.root)
